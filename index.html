@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Map - Gestão à vista (5W2H)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+        
+        /* Ocultar elementos visualmente para o sistema de abas */
+        .hidden-tab {
+            display: none;
+        }
+
+        /* Estilização extra para inputs e selects */
+        .form-input {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #D1D5DB;
+            color: #111827;
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Ajuste fino para os gráficos do ApexCharts */
+        .apexcharts-tooltip {
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+        }
+    </style>
+</head>
+<body class="text-gray-900 p-4 md:p-6 min-h-screen">
+
+    <div class="max-w-[1600px] mx-auto space-y-6">
+        
+        <header class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
+                    Road Map - Gestão à vista (5W2H)
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">
+                    Gestão de Manutenção, Elétrica e Projetos
+                </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-4 bg-gray-50 px-4 py-2.5 rounded-md border border-gray-200">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="upload" class="text-blue-600 h-[18px] w-[18px]"></i>
+                    <div class="text-sm">
+                        <span class="text-gray-500">Arquivo Alvo: </span>
+                        <span class="font-semibold text-blue-600 cursor-pointer hover:underline">
+                            Ações Road Map Manutenção e Projetos.xls
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="border-b border-gray-200">
+            <nav class="flex space-x-8" aria-label="Tabs">
+                <button id="btn-tab-dashboard" onclick="switchTab('dashboard')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors border-blue-600 text-blue-600">
+                    <i data-lucide="layout-dashboard" class="h-[18px] w-[18px]"></i>
+                    Dashboard Analítico (Reunião)
+                </button>
+                <button id="btn-tab-operacional" onclick="switchTab('operacional')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i data-lucide="list-todo" class="h-[18px] w-[18px]"></i>
+                    Gestão Operacional (Cadastro e Tabelas)
+                </button>
+            </nav>
+        </div>
+
+        <!-- =========================================
+             ABA 1: DASHBOARD ANALÍTICO
+             ========================================= -->
+        <div id="tab-dashboard" class="space-y-6">
+            
+            <!-- Linha de KPIs -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-700">
+                        <i data-lucide="target" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Atividades</h3>
+                        <p class="text-2xl font-bold text-gray-900 leading-tight">124</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">Neste ciclo</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-red-100 text-red-700">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Em Atraso</h3>
+                        <p class="text-2xl font-bold text-red-600 leading-tight">14</p>
+                        <p class="text-[10px] text-red-500 mt-0.5 font-medium">Impacto no cronograma!</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-red-100 text-red-700">
+                        <i data-lucide="trending-down" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Estouro Orçamento</h3>
+                        <p class="text-2xl font-bold text-red-600 leading-tight">R$ 8.000</p>
+                        <p class="text-[10px] text-red-500 mt-0.5 font-medium">Acima da meta!</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-amber-100 text-amber-700">
+                        <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Custo Projetado</h3>
+                        <p class="text-2xl font-bold text-gray-900 leading-tight">R$ 65.000</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">Orçamento total</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-green-100 text-green-700">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Taxa Conclusão</h3>
+                        <p class="text-2xl font-bold text-gray-900 leading-tight">78%</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">Progresso geral</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Gráfico 1: WHO -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>
+                        Desempenho por Responsável (WHO)
+                    </h3>
+                    <div id="chart-who" class="h-[300px] w-full"></div>
+                </div>
+
+                <!-- Gráfico 2: WHERE -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-purple-600 rounded-full"></span>
+                        Distribuição por Área (WHERE)
+                    </h3>
+                    <div id="chart-where" class="h-[300px] w-full flex items-center justify-center"></div>
+                </div>
+
+                <!-- Gráfico 3: HOW MUCH -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-emerald-600 rounded-full"></span>
+                        Gestão Financeira (Custo Realizado vs Meta)
+                    </h3>
+                    <div id="chart-how-much" class="h-[300px] w-full"></div>
+                </div>
+
+                <!-- Gráfico 4: WHEN -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-orange-500 rounded-full"></span>
+                        Adesão ao Cronograma Semanal (Atrasos)
+                    </h3>
+                    <div id="chart-when" class="h-[300px] w-full"></div>
+                </div>
+            </div>
+
+            <!-- Gráfico 5: TIMELINE (Full Width) -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+                <h3 class="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-cyan-600 rounded-full"></span>
+                    Evolução do Projeto: Volume Planejado vs Executado (TIMELINE)
+                </h3>
+                <div id="chart-timeline" class="h-[300px] w-full"></div>
+            </div>
+        </div>
+
+        <!-- =========================================
+             ABA 2: GESTÃO OPERACIONAL
+             ========================================= -->
+        <div id="tab-operacional" class="space-y-6 hidden-tab">
+            <!-- Aviso de Upload -->
+            <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-center gap-3">
+                <i data-lucide="upload" class="text-blue-600 w-5 h-5"></i>
+                <div>
+                    <h3 class="text-sm font-bold text-blue-900">Preencha o Dashboard com sua Planilha</h3>
+                    <div class="flex items-center gap-3 mt-2">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1.5 px-4 rounded transition-colors shadow-sm">
+                            Escolher ficheiro
+                        </button>
+                        <span class="text-xs text-gray-500">Nenhum arquivo selecionado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário 5W2H -->
+            <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h2 class="text-base font-bold text-gray-800 mb-5 flex items-center gap-2 border-b border-gray-100 pb-3">
+                    <i data-lucide="plus" class="text-blue-600 w-[18px] h-[18px]"></i>
+                    Adicionar Atividade (Metodologia 5W2H)
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-5">
+                    <div class="lg:col-span-3">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">QUEM (WHO) - RESPONSÁVEL/ÁREA</label>
+                        <input type="text" placeholder="Ex: João / Elétrica" class="form-input" />
+                    </div>
+                    <div class="lg:col-span-6">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">O QUE (WHAT) - DESCRIÇÃO DA ATIVIDADE</label>
+                        <input type="text" placeholder="Descreva a atividade central a ser executada" class="form-input" />
+                    </div>
+                    <div class="lg:col-span-3">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">ONDE (WHERE) - LOCAL/EQUIPAMENTO</label>
+                        <input type="text" placeholder="Ex: Painel Principal" class="form-input" />
+                    </div>
+                    
+                    <div class="lg:col-span-4">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">POR QUE (WHY) - JUSTIFICATIVA</label>
+                        <input type="text" placeholder="Qual o motivo da execução?" class="form-input" />
+                    </div>
+                    <div class="lg:col-span-8">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">COMO (HOW) - PLANO DE AÇÃO (PASSOS)</label>
+                        <input type="text" placeholder="Detalhamento passo a passo..." class="form-input" />
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">QUANTO (HOW MUCH) - CUSTO R$</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="dollar-sign" class="h-4 w-4 text-gray-400"></i>
+                            </div>
+                            <input type="number" placeholder="Ex: 1500.00" class="form-input pl-9" />
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">QUANDO (INÍCIO)</label>
+                        <input type="date" class="form-input" />
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">QUANDO (FIM)</label>
+                        <input type="date" class="form-input" />
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">STATUS ATUAL</label>
+                        <select class="form-input">
+                            <option>Planejado</option>
+                            <option>Em Andamento</option>
+                            <option>Concluído</option>
+                            <option>Atrasado</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-3 flex items-end">
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-[9px] rounded text-sm transition-colors shadow-sm">
+                            Salvar Atividade
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabela de Dados -->
+            <section class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                    <h2 class="text-base font-bold text-gray-800">Detalhamento das Atividades (Operacional)</h2>
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Custo Listado: <span class="text-gray-900">R$ 10,00</span></span>
+                        <span class="bg-white text-gray-600 text-xs font-bold px-3 py-1 rounded-full border border-gray-200 shadow-sm">
+                            80 listadas
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <thead class="bg-[#F8FAFC] border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3 w-16 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">ITEM</th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">QUEM (WHO)<br/><span class="font-normal text-gray-400 normal-case">Responsável / Área</span></th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">ONDE (WHERE)<br/><span class="font-normal text-gray-400 normal-case">Local / Equipamento</span></th>
+                                <th class="px-4 py-3 w-64 text-[10px] font-bold text-gray-500 uppercase tracking-wider">O QUE (WHAT)<br/><span class="font-normal text-gray-400 normal-case">Atividade Central</span></th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">POR QUE (WHY)<br/><span class="font-normal text-gray-400 normal-case">Motivo / Justificativa</span></th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">COMO (HOW)<br/><span class="font-normal text-gray-400 normal-case">Plano de Ação (Passos)</span></th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">QUANDO<br/><span class="font-normal text-gray-400 normal-case">Início / Fim</span></th>
+                                <th class="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">QUANTO<br/><span class="font-normal text-gray-400 normal-case">(How Much)</span></th>
+                                <th class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-gray-100 text-sm">
+                            <!-- Injetado via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. INICIALIZAR ÍCONES LUCIDE
+        lucide.createIcons();
+
+        // 2. MOCK DATA PARA A TABELA (Operacional)
+        const tableData = [
+            { id: 1, who: 'José Ronielson', area: 'Elétrica', where: 'Não Informado', what: 'Verificar pendências elétricas do dia anterior', why: '-', how: '-', start: '-', end: '-', cost: '-', status: 'PLANEJADO' },
+            { id: 2, who: 'José Ronielson', area: 'Elétrica', where: 'Não Informado', what: 'Análise e execução das ações do 5S', why: '-', how: '-', start: '20/08/26', end: '25/08/26', cost: '-', status: 'CONCLUÍDO' },
+            { id: 3, who: 'José Ronielson', area: 'Elétrica', where: 'Não Informado', what: 'Instalação de Para-raios nos Elevadores do projeto Secagem', why: '-', how: '-', start: '-', end: '-', cost: '-', status: 'PLANEJADO' },
+            { id: 4, who: 'José Ronielson', area: 'Elétrica', where: 'Não Informado', what: 'Gestão de planejamento Semanal', why: '-', how: '-', start: '-', end: '-', cost: '-', status: 'PLANEJADO' },
+            { id: 5, who: 'Júlio Lima', area: 'Mecânica', where: 'Caldeira', what: 'Acompanhar execução das O.S mecânicas', why: '-', how: '-', start: '-', end: '-', cost: '-', status: 'EM ANDAMENTO' },
+            { id: 6, who: 'Alex Paduan', area: 'Civil', where: 'Pátio', what: 'Reforma do piso da expedição', why: 'Trincas no cimento', how: 'Quebrar e concretar', start: '01/09/26', end: '15/09/26', cost: 'R$ 5000', status: 'ATRASADO' }
+        ];
+
+        // 3. LÓGICA DAS ABAS
+        function switchTab(tabId) {
+            // Oculta todas as abas
+            document.getElementById('tab-dashboard').classList.add('hidden-tab');
+            document.getElementById('tab-operacional').classList.add('hidden-tab');
+            
+            // Reseta estilo dos botões
+            const btnDash = document.getElementById('btn-tab-dashboard');
+            const btnOperacional = document.getElementById('btn-tab-operacional');
+            
+            const inactiveClasses = ['border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'];
+            const activeClasses = ['border-blue-600', 'text-blue-600'];
+
+            btnDash.classList.remove(...activeClasses);
+            btnDash.classList.add(...inactiveClasses);
+            btnOperacional.classList.remove(...activeClasses);
+            btnOperacional.classList.add(...inactiveClasses);
+
+            // Mostra a aba clicada e aplica estilo ativo
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden-tab');
+            const activeBtn = document.getElementById(`btn-tab-${tabId}`);
+            activeBtn.classList.remove(...inactiveClasses);
+            activeBtn.classList.add(...activeClasses);
+
+            // Disparar evento de resize para o ApexCharts redesenhar os gráficos perfeitamente
+            if(tabId === 'dashboard'){
+                window.dispatchEvent(new Event('resize'));
+            }
+        }
+
+        // 4. PREENCHER A TABELA
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            
+            const statusStyles = {
+                'PLANEJADO': 'bg-[#EFF6FF] text-[#1E40AF] border-[#BFDBFE]',
+                'EM ANDAMENTO': 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]',
+                'CONCLUÍDO': 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]',
+                'ATRASADO': 'bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]',
+            };
+
+            const html = tableData.map((row, index) => {
+                const style = statusStyles[row.status] || 'bg-gray-50 text-gray-600 border-gray-200';
+                const badge = `<span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border ${style}">${row.status}</span>`;
+                
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 text-center text-gray-500 font-medium text-xs">${index + 1}</td>
+                        <td class="px-4 py-4">
+                            <div class="font-bold text-gray-900 text-xs">${row.who}</div>
+                            <div class="text-gray-500 text-[11px] mt-0.5">${row.area}</div>
+                        </td>
+                        <td class="px-4 py-4 text-blue-600 font-medium text-xs">${row.where}</td>
+                        <td class="px-4 py-4 font-semibold text-gray-800 text-xs leading-snug">${row.what}</td>
+                        <td class="px-4 py-4 text-gray-500 text-xs">${row.why}</td>
+                        <td class="px-4 py-4 text-gray-500 text-xs">${row.how}</td>
+                        <td class="px-4 py-4 text-gray-600 text-[11px] space-y-1">
+                            <div>I: ${row.start}</div>
+                            <div>F: ${row.end}</div>
+                        </td>
+                        <td class="px-4 py-4 text-gray-500 text-xs font-medium">${row.cost}</td>
+                        <td class="px-4 py-4 text-center">${badge}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            tbody.innerHTML = html;
+        }
+
+        // 5. RENDERIZAR GRÁFICOS (VISUAL PREMIUM / SaaS - BARRAS LADO A LADO)
+        function renderCharts() {
+            // Configuração global de design para barras distintas (sem empilhar)
+            const modernBarOptions = {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '65%', // Barras um pouco mais largas para preencher bem o espaço
+                    borderRadius: 4, 
+                    borderRadiusApplication: 'end' // Arredonda sempre a ponta superior
+                }
+            };
+
+            const modernFill = {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.3,
+                    opacityFrom: 0.95,
+                    opacityTo: 0.75,
+                    stops: [0, 100]
+                }
+            };
+
+            const modernDataLabels = {
+                enabled: true,
+                formatter: (val) => val > 0 ? val : '', // Oculta os zeros para não poluir
+                offsetY: -20, // Coloca o número perfeitamente ACIMA da barra (e não dentro)
+                style: { 
+                    fontSize: '10px', 
+                    fontWeight: '600', 
+                    colors: ["#64748B"], // Cor neutra para o texto fora da barra
+                    fontFamily: 'Inter, sans-serif'
+                },
+                background: { enabled: false },
+                dropShadow: { enabled: false }
+            };
+
+            // --- Gráfico 1: WHO (Lado a Lado - Sem Empilhar) ---
+            const optionsWho = {
+                series: [
+                    { name: 'Concluído', data: [1, 1, 2, 2, 1, 0] },
+                    { name: 'Atrasado', data: [2, 0, 0, 1, 0, 1] },
+                    { name: 'Em Andamento', data: [1, 1, 2, 0, 0, 0] },
+                    { name: 'Planejado', data: [18, 18, 6, 6, 15, 0] }
+                ],
+                chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+                colors: ['#10B981', '#EF4444', '#F59E0B', '#3B82F6'], // Verde, Vermelho, Amarelo, Azul
+                plotOptions: modernBarOptions,
+                fill: modernFill,
+                xaxis: { 
+                    categories: ['José', 'Marco', 'Bianca', 'Júlio', 'Ivanildo', 'Alex'],
+                    labels: { style: { colors: '#6B7280', fontSize: '11px', fontWeight: 500 } },
+                    axisBorder: { show: false }, axisTicks: { show: false }
+                },
+                yaxis: { labels: { style: { colors: '#9CA3AF', fontSize: '11px' } } },
+                grid: { borderColor: '#F1F5F9', strokeDashArray: 4 },
+                legend: { position: 'bottom', fontSize: '12px', markers: { radius: 12 }, itemMargin: { horizontal: 10, vertical: 5 } },
+                dataLabels: modernDataLabels
+            };
+            new ApexCharts(document.querySelector("#chart-who"), optionsWho).render();
+
+            // --- Gráfico 2: WHERE (Donut - Mantido limpo) ---
+            const optionsWhere = {
+                series: [45, 30, 15, 10],
+                labels: ['Elétrica', 'Mecânica', 'Civil', 'Projetos'],
+                chart: { type: 'donut', height: 280, fontFamily: 'Inter, sans-serif' },
+                colors: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
+                plotOptions: { pie: { donut: { size: '65%' } } },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) { return Math.round(val) + "%" },
+                    style: { fontSize: '12px', fontWeight: 'bold', fontFamily: 'Inter, sans-serif' },
+                    dropShadow: { enabled: false }
+                },
+                legend: { position: 'bottom', fontSize: '12px', markers: { radius: 12 } },
+                stroke: { width: 3, colors: ['#fff'] }
+            };
+            new ApexCharts(document.querySelector("#chart-where"), optionsWhere).render();
+
+            // --- Gráfico 3: HOW MUCH (Orçado vs Realizado Lado a Lado) ---
+            const optionsHowMuch = {
+                series: [
+                    { name: 'Orçado (Meta)', data: [15000, 25000, 8000, 12000, 5000] },
+                    { name: 'Custo Realizado', data: [14200, 28500, 7500, 16500, 4800] }
+                ],
+                chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+                plotOptions: modernBarOptions,
+                colors: ['#94A3B8', '#3B82F6'], // Cinza para o Orçado, Azul vibrante para o Realizado
+                fill: modernFill,
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) { return "R$" + (val / 1000) + "k"; },
+                    offsetY: -20,
+                    style: { fontSize: '10px', colors: ["#64748B"], fontWeight: 600, fontFamily: 'Inter, sans-serif' },
+                    background: { enabled: false },
+                    dropShadow: { enabled: false }
+                },
+                legend: { position: 'bottom', fontSize: '12px', markers: { radius: 12 } },
+                xaxis: { 
+                    categories: ['Secagem', 'Caldeira', 'Elevadores', 'Embalagem', 'Expedição'],
+                    labels: { style: { colors: '#6B7280', fontSize: '11px', fontWeight: 500 } },
+                    axisBorder: { show: false }, axisTicks: { show: false }
+                },
+                yaxis: { 
+                    labels: { 
+                        style: { colors: '#9CA3AF', fontSize: '11px' },
+                        formatter: (value) => { return "R$" + (value / 1000) + "k" }
+                    } 
+                },
+                grid: { borderColor: '#F1F5F9', strokeDashArray: 4 }
+            };
+            new ApexCharts(document.querySelector("#chart-how-much"), optionsHowMuch).render();
+
+            // --- Gráfico 4: WHEN (Lado a Lado - Sem Empilhar) ---
+            const optionsWhen = {
+                series: [
+                    { name: 'Concluído no Prazo', data: [12, 18, 15, 10, 5] },
+                    { name: 'Atrasado (Pendente)', data: [0, 0, 1, 4, 10] }
+                ],
+                chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+                colors: ['#10B981', '#EF4444'], // Apenas o que importa: Verde vs Vermelho
+                plotOptions: modernBarOptions,
+                fill: modernFill,
+                dataLabels: modernDataLabels,
+                xaxis: { 
+                    categories: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5'],
+                    labels: { style: { colors: '#6B7280', fontSize: '11px', fontWeight: 500 } },
+                    axisBorder: { show: false }, axisTicks: { show: false }
+                },
+                yaxis: { labels: { style: { colors: '#9CA3AF', fontSize: '11px' } } },
+                grid: { borderColor: '#F1F5F9', strokeDashArray: 4 },
+                legend: { position: 'bottom', fontSize: '12px', markers: { radius: 12 }, itemMargin: { horizontal: 10, vertical: 5 } }
+            };
+            new ApexCharts(document.querySelector("#chart-when"), optionsWhen).render();
+
+            // --- Gráfico 5: TIMELINE (Planejado vs Executado) ---
+            const optionsTimeline = {
+                series: [
+                    { name: 'Volume Planejado', type: 'area', data: [10, 15, 25, 20, 10] },
+                    { name: 'Volume Executado', type: 'line', data: [8, 12, 18, 22, 5] }
+                ],
+                chart: { height: 280, type: 'line', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+                stroke: { curve: 'smooth', width: [0, 4] },
+                colors: ['#BFDBFE', '#3B82F6'],
+                fill: { 
+                    type: ['gradient', 'solid'], 
+                    gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] }
+                },
+                xaxis: { 
+                    categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                    labels: { style: { colors: '#6B7280', fontSize: '11px', fontWeight: 500 } },
+                    axisBorder: { show: false }, axisTicks: { show: false }
+                },
+                yaxis: { labels: { style: { colors: '#9CA3AF', fontSize: '11px' } } },
+                grid: { borderColor: '#F1F5F9', strokeDashArray: 4 },
+                legend: { position: 'top', horizontalAlign: 'right', fontSize: '12px', markers: { radius: 12 } },
+                markers: { size: [0, 6], colors: ['#fff'], strokeColors: '#3B82F6', strokeWidth: 3, hover: { size: 8 } },
+                dataLabels: { 
+                    enabled: true, 
+                    enabledOnSeries: [1], 
+                    offsetY: -10,
+                    style: { fontSize: '12px', colors: ['#1E3A8A'], fontWeight: 'bold' },
+                    background: { enabled: false },
+                    dropShadow: { enabled: false }
+                }
+            };
+            new ApexCharts(document.querySelector("#chart-timeline"), optionsTimeline).render();
+        }
+
+        // 6. INICIALIZAÇÃO AO CARREGAR A PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            renderCharts();
+        });
+    </script>
+</body>
+</html>
